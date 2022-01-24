@@ -1,0 +1,113 @@
+local PaintEvent = game.ReplicatedStorage.CustomizationEvents.ColorPaint
+local RimEvent = game.ReplicatedStorage.CustomizationEvents.RimPaint
+local ReflectanceEvent = game.ReplicatedStorage.CustomizationEvents.WindowReflectance
+local TeleportEvent = game.ReplicatedStorage.CustomizationEvents.TeleportEvent
+local ExitEvent = game.ReplicatedStorage.CustomizationEvents.ExitGarage
+---
+local Garage1Occupant = false
+local Garage2Occuapnt = false
+---
+local ServerStorage = game:GetService("ServerStorage")
+---- Garage
+local Teleport1 = game.Workspace.Garage.Teleport1
+local Teleport2 = game.Workspace.Garage.Teleport2
+
+local function anchor(object)
+	local descendants = object:GetDescendants()
+
+	for i, descendant in pairs(descendants) do
+		if descendant:IsA("BasePart") then
+			descendant.Anchored = true
+		end
+	end
+end
+
+local function unanchor(object)
+	local descendants = object:GetDescendants()
+
+	for i, descendant in pairs(descendants) do
+		if descendant:IsA("BasePart") then
+			descendant.Anchored = false
+		end
+	end
+end
+
+PaintEvent.OnServerEvent:Connect(function(player,PaintCost)
+	local PlayersCar = game.Workspace:FindFirstChild(player.Name.."'s Car")
+	if PlayersCar then
+		local leaderstats = player:WaitForChild("leaderstats")
+		local OwnedColorsFolder = player:WaitForChild("OwnedColors")
+		local OwnedColor = OwnedColorsFolder:FindFirstChild(PlayersCar.Customization.Car.Value)
+		local Color = player.PlayerGui.CarCustomization.Paint.ColorPaint.ColorValue.Value
+
+		local function Paint(PlayersCar)
+			local Body = PlayersCar:WaitForChild("Body")
+			local PaintModel = Body:WaitForChild("Paint")
+
+			if PaintModel then -- Found paint model
+				for i,v in pairs(PaintModel:GetChildren()) do
+					v.BrickColor = Color
+					OwnedColor.Value = v.BrickColor.Name
+				end
+			end
+		end
+
+		if PlayersCar then -- Player has spawned car
+			if OwnedColor then -- Found car in the folder
+				if leaderstats:FindFirstChild("Money").Value > PaintCost then--- if player has enough money to paint and pay
+					Paint(PlayersCar)
+					leaderstats:FindFirstChild("Money").Value = leaderstats:FindFirstChild("Money").Value - PaintCost
+				end
+			end
+		elseif not PlayersCar then
+			print(player.." has no spawned car,event canceled")
+		end
+	elseif not PlayersCar then
+		print(player.." has no spawned car,event canceled")
+	end
+
+end)
+
+
+RimEvent.OnServerEvent:Connect(function(player,PaintCost)
+	local PlayersCar = game.Workspace:FindFirstChild(player.Name.."'s Car")
+	if PlayersCar then
+		local leaderstats = player:WaitForChild("leaderstats")
+		local OwnedColorsFolder = player:WaitForChild("OwnedRimColor")
+		local OwnedColor = OwnedColorsFolder:FindFirstChild(PlayersCar.Customization.Car.Value)
+		local Color = player.PlayerGui.CarCustomization.Paint.RimPaint.ColorValue.Value
+
+		local function Paint(PlayersCar)
+			local Body = PlayersCar:WaitForChild("Wheels")
+			for index, descendant in pairs(Body:GetDescendants()) do
+				if descendant.Name == "Rim" then
+					descendant.BrickColor = Color
+					OwnedColor.Value = descendant.BrickColor.Name
+				end
+			end
+		end
+
+		local leaderstats = player:WaitForChild("leaderstats")
+		if leaderstats:FindFirstChild("Money").Value > PaintCost then--- if player has enough money to paint and pay
+			Paint(PlayersCar)
+			leaderstats:FindFirstChild("Money").Value = leaderstats:FindFirstChild("Money").Value - PaintCost
+		end
+	end
+end)
+
+
+ReflectanceEvent.OnServerEvent:Connect(function(player,Reflectance,ReflectanceCost)
+	local Car = game.Workspace:FindFirstChild(player.Name.."'s Car")
+	if Car then --- we found players car
+		local WindowModel = Car:WaitForChild("Body"):WaitForChild("Windows")
+		if WindowModel then
+			for i,v in pairs(WindowModel:GetChildren()) do
+				if player.leaderstats:FindFirstChild("Money").Value > ReflectanceCost then
+					v.Reflectance = Reflectance
+					player.leaderstats:FindFirstChild("Money").Value = player.leaderstats:FindFirstChild("Money").Value - ReflectanceCost
+					player.OwnedReflectance:FindFirstChild(Car.Customization.Car.Value).Value = Reflectance				
+				end
+			end
+		end
+	end
+end)
