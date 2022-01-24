@@ -1,0 +1,61 @@
+local players = game:GetService("Players")
+local dataStore = game:GetService("DataStoreService")
+
+local CustomizationData1 = dataStore:GetDataStore("CustomizationData1")
+local CustomizationData2 = dataStore:GetDataStore("CustomizationData2") -- one car unfrotnlely
+local CustomizationData3 = dataStore:GetDataStore("CustomizationData3")
+local CustomizationData4 = dataStore:GetDataStore("Drivetrain1")
+
+
+players.PlayerAdded:Connect(function(player)
+	local folder = Instance.new("Folder") -- making new folder
+	folder.Name = "Customization" -- Customization Folder
+	folder.Parent = player -- parent to player
+
+	
+	local folder = Instance.new("Folder")
+	folder.Name = "AChassis" -- Car Name
+	local EngineUpgrade = Instance.new("NumberValue",folder) -- Engine Upgrade.
+
+	EngineUpgrade.Name = "EngineUpgrade" -- Value's name DO NOT CHANGE!
+    EngineUpgrade.Value = "100" --- None is bone stock, put Engine1 if u want it to be already upgraded!
+	folder.Parent = player.Customization -- Folder Parent
+
+	EngineUpgrade.Value = CustomizationData1:GetAsync(player.UserId) or 100 -- Gets Data.
+	CustomizationData1:SetAsync(player.UserId, EngineUpgrade.Value) -- Setting data.
+
+	local Turbo = Instance.new("NumberValue",folder) --Turbo Value for the car
+	Turbo.Name = "Turbo"
+	Turbo.Value = 0 -- 0 is N/A
+	Turbo.Value = CustomizationData2:GetAsync(player.UserId) or 0 -- Gets Data.
+	CustomizationData2:SetAsync(player.UserId, Turbo.Value) -- Setting data.
+	
+	local Supercharger = Instance.new("NumberValue",folder) --Supercharger Value for the car
+	Supercharger.Name = "Supercharger"
+	Supercharger.Value = 0 -- 0 is N/A
+	Supercharger.Value = CustomizationData3:GetAsync(player.UserId) or 0 -- Gets Data.
+	CustomizationData3:SetAsync(player.UserId, Supercharger.Value) -- Setting data.
+	
+	local Drivetrain = Instance.new("StringValue",folder) --Turbo Value for the car
+	Drivetrain.Name = "Drivetrain"
+	Drivetrain.Value = "FWD" --
+	Drivetrain.Value = CustomizationData4:GetAsync(player.UserId) or "FWD" -- Gets Data.
+	CustomizationData4:SetAsync(player.UserId, Drivetrain.Value) -- Setting data.
+    
+	
+	EngineUpgrade.Changed:Connect(function()
+		CustomizationData1:SetAsync(player.UserId, EngineUpgrade.Value) -- Changing data if value changed.
+	end)
+	
+	Turbo.Changed:Connect(function()
+		CustomizationData2:SetAsync(player.UserId, Turbo.Value) -- Changing data if value changed.
+	end)
+	
+	Supercharger.Changed:Connect(function()
+		CustomizationData3:SetAsync(player.UserId, Supercharger.Value) -- Changing data if value changed.
+	end)
+	
+	Drivetrain.Changed:Connect(function()
+		CustomizationData4:SetAsync(player.UserId, Drivetrain.Value) -- Changing data if value changed.
+	end)
+end)
