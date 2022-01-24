@@ -1,0 +1,84 @@
+local EngineUpgrade1Price = 1500
+local EngineUpgrade2Price = 3500
+local EngineUpgrade3Price = 6500
+local EngineUpgrade4Price = 11500
+
+game.ReplicatedStorage.CustomizationEvents.EngineUpgrade.OnServerEvent:Connect(function(player,Car,EngineUpgrade)
+	local Money = player.leaderstats:FindFirstChild("Money")
+	
+	if EngineUpgrade == "EngineUpgrade1" then
+		if EngineUpgrade1Price and Money.Value >= EngineUpgrade1Price then
+			player.Customization:FindFirstChild(Car).EngineUpgrade.Value = 250
+			Money.Value = Money.Value - EngineUpgrade1Price
+		end
+	elseif  EngineUpgrade == "EngineUpgrade2" then
+		if EngineUpgrade2Price and Money.Value >= EngineUpgrade2Price then
+			player.Customization:FindFirstChild(Car).EngineUpgrade.Value = 450
+			Money.Value = Money.Value - EngineUpgrade2Price
+		end
+	elseif EngineUpgrade == "EngineUpgrade3" then
+		if EngineUpgrade3Price and Money.Value >= EngineUpgrade3Price then
+			player.Customization:FindFirstChild(Car).EngineUpgrade.Value = 650
+			Money.Value = Money.Value - EngineUpgrade3Price
+		end
+	elseif EngineUpgrade == "EngineUpgrade4" then
+		if EngineUpgrade4Price and Money.Value >= EngineUpgrade4Price then
+			player.Customization:FindFirstChild(Car).EngineUpgrade.Value = 1050
+			Money.Value = Money.Value - EngineUpgrade4Price
+		end
+	end
+end)
+
+local SuperchargerUpgrade = 4500
+local TurboUpgrade = 5500
+
+
+game.ReplicatedStorage.CustomizationEvents.InductionUpgrade.OnServerEvent:Connect(function(player,Car,InductionUpgrade)
+	local Money = player.leaderstats:FindFirstChild("Money")
+	
+	if InductionUpgrade == "Turbo" then
+		if TurboUpgrade and Money.Value >= TurboUpgrade then
+			player.Customization:FindFirstChild(Car).Turbo.Value = 4
+			player.Customization:FindFirstChild(Car).Supercharger.Value = 0
+			Money.Value = Money.Value - TurboUpgrade
+		end
+		
+	elseif InductionUpgrade == "Supercharger" then
+		if SuperchargerUpgrade and Money.Value >= SuperchargerUpgrade then
+			player.Customization:FindFirstChild(Car).Supercharger.Value = 4
+			player.Customization:FindFirstChild(Car).Turbo.Value = 0
+			Money.Value = Money.Value - SuperchargerUpgrade
+		end
+		
+	elseif InductionUpgrade == "N/A" then
+			player.Customization:FindFirstChild(Car).Turbo.Value = 0
+			player.Customization:FindFirstChild(Car).Supercharger.Value = 0
+		end
+end)
+
+local FWDPrice = 1000
+local RWDPrice = 2500
+local AWDPrice = 4500
+
+game.ReplicatedStorage.CustomizationEvents.Drivetrain.OnServerEvent:Connect(function(player,Car,Drivetrain)
+	local Money = player.leaderstats:FindFirstChild("Money")
+	
+	if Drivetrain == "FWD" then
+		if FWDPrice and Money.Value >= FWDPrice then
+			player.Customization:FindFirstChild(Car).Drivetrain.Value = "FWD"
+			Money.Value = Money.Value - FWDPrice
+		end
+		
+	elseif Drivetrain == "RWD" then
+		if RWDPrice and Money.Value >= RWDPrice then
+			player.Customization:FindFirstChild(Car).Drivetrain.Value = "RWD"
+			Money.Value = Money.Value - RWDPrice
+		end
+		
+	elseif Drivetrain == "AWD" then
+		if AWDPrice and Money.Value >= AWDPrice then
+			player.Customization:FindFirstChild(Car).Drivetrain.Value = "AWD"
+			Money.Value = Money.Value - AWDPrice
+		end
+	end
+end)
