@@ -1,0 +1,6 @@
+script.Parent.Triggered:Connect(function(player)
+	local Car = game.Workspace:FindFirstChild(player.Name.."'s Car")
+	local CarName = Car.Customization.Car.Value
+	
+	player.PlayerGui.CarCustomization.CurrentCar.Value = CarName
+end)
